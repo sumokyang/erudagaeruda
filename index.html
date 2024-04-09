@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>떨어지는 이름 애니메이션</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .name {
+    position: absolute;
+    color: white;
+    font-size: 20px;
+  }
+</style>
+</head>
+<body>
+
+<script>
+  const names = ["김동임", "김미나", "김은경", "박신애", "서영현", "송희영", "신상희", "양수목", "유현경", "윤은주", "이순주", "임아미", "조은진", "류정희", "우정호", "이지현"];
+  const colors = ["#FF5733", "#C70039", "#900C3F", "#581845", "#FFC300", "#FF5733", "#C70039", "#900C3F"];
+
+  function getRandomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function createName() {
+    const name = document.createElement("div");
+    name.classList.add("name");
+    name.textContent = names[Math.floor(Math.random() * names.length)];
+    name.style.color = colors[Math.floor(Math.random() * colors.length)];
+    name.style.left = `${getRandomNumber(0, window.innerWidth)}px`;
+    name.style.top = `${getRandomNumber(-100, -50)}px`;
+    document.body.appendChild(name);
+
+    const stopPosition = window.innerHeight * (2 / 3);
+    const fallSpeed = 1 + Math.random(); // Adjust speed
+
+    function fall() {
+      const currentTop = name.offsetTop + fallSpeed;
+      if (currentTop < stopPosition) {
+        name.style.top = `${currentTop}px`;
+        requestAnimationFrame(fall);
+      } else {
+        fadeOut(name);
+      }
+    }
+
+    function fadeOut(element) {
+      let opacity = 1;
+      const fadeEffect = setInterval(function () {
+        if (opacity <= 0.01) {
+          clearInterval(fadeEffect);
+          document.body.removeChild(element);
+        } else {
+          opacity -= 0.01;
+          element.style.opacity = opacity;
+        }
+      }, 10);
+    }
+
+    fall();
+  }
+
+  setInterval(createName, 500); // Adjust frequency
+</script>
+
+</body>
+</html>
